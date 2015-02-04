@@ -25,7 +25,8 @@
 #>
 
 Param (
-    $configFile
+    [string]$configFile,
+    [string]$location
 )
 
 # changes Powershell to x64, if it was started on x86
@@ -74,7 +75,7 @@ Function DefineConfiguration ($iisPath, $iisConfig){
 <# Loading function DefineConfiguration #>
 # this function works like functions on top, but only this creates new "WebConfigurations"
 Function DefineConfiguration ($iisPath, $iisConfig){
-    Set-WebConfiguration $iisPath -Value $iisConfig -PSPath $IISRootPath
+    Set-WebConfiguration $iisPath -Value $iisConfig -PSPath $IISRootPath -Location $location
 }
 
 <# Loading Configuration File #>

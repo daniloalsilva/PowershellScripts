@@ -33,11 +33,14 @@ Import-Module WebAdministration
 
 $sites = ls IIS:\Sites
 $logFiles = foreach ($site in $sites){
-    $dirlog = ls $site.logFile.directory -ErrorAction SilentlyContinue
+    $dirlog = ls "$($site.logFile.directory)\W3SVC$($site.ID)" -ErrorAction SilentlyContinue
     if ($dirlog -ne $null){
-        $logs = ls $dirlog.FullName | ? { $_.LastWriteTime.Date -eq (Get-Date).Date }
+        $dirlog | %{
+            if($_.LastWriteTime.Date -eq (Get-Date).Date){
+                $_.FullName
+            }
+        }
     }
-    $logs.FullName
 }
 
 $reader = @{}

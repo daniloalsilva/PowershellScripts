@@ -22,11 +22,12 @@ Function Get-Websites ([string]$siteName){
         $Websites | % {
             
             $siteName = $_.ServerComment
-            
+            $siteID = $_.Name
             $bindings = $_.ServerBindings
             foreach ($binding in $bindings)
             {
                 New-Object PSObject -Property @{
+                    ID = $siteID
                     Type = "HTTP"
                     SiteName = $siteName
                     Hostname = $binding.Hostname
@@ -40,6 +41,7 @@ Function Get-Websites ([string]$siteName){
             {
                 if(![String]::IsNullOrEmpty($sbinding.Port)){
                     New-Object PSObject -Property @{
+                        ID = $siteID
                         Type = "HTTPS"
                         SiteName = $siteName
                         Hostname = $sbinding.Hostname

@@ -1,4 +1,5 @@
 function pstelnet ([Parameter(Mandatory=$true)][string] $remoteHost, [Parameter(Mandatory=$true)][int] $port, [string[]] $commands){
+    $ErrorActionPreference = 'Stop'
     try { ## Open the socket, and connect to the computer on the specified port
         # write-host "Connecting to $remoteHost on port $port"
         $socket = new-object System.Net.Sockets.TcpClient($remoteHost, $port)
@@ -38,6 +39,8 @@ function pstelnet ([Parameter(Mandatory=$true)][string] $remoteHost, [Parameter(
             Port = $port
             ConnectionResult = "OK"
         }
+        $writer.Close()
+        $stream.Close()
     }
 
     catch {
@@ -60,7 +63,5 @@ function pstelnet ([Parameter(Mandatory=$true)][string] $remoteHost, [Parameter(
     finally {
         ## Close the streams
         ## Cleans everything up.
-        $writer.Close()
-        $stream.Close()
     }
 }

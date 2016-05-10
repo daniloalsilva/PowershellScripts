@@ -31,8 +31,10 @@ Param(
 
 Import-Module WebAdministration
 
+$counter = 0
 $sites = ls IIS:\Sites
 $logFiles = foreach ($site in $sites){
+    Write-Progress -PercentComplete ($counter * 100 / $sites.Count) -Activity "Collecting websites log paths..." -Status "Opening $counter of $($sites.Count)"
     $dirlog = ls "$($site.logFile.directory)\W3SVC$($site.ID)" -ErrorAction SilentlyContinue
     if ($dirlog -ne $null){
         $dirlog | %{
@@ -41,21 +43,25 @@ $logFiles = foreach ($site in $sites){
             }
         }
     }
+    $counter++
 }
 
 $reader = @{}
 $lastMaxOffset = @{}
 
+$counter = 0
 foreach($log in ($logFiles | select -Unique)){
-
+    Write-Progress -PercentComplete ($counter * 100 / $logFiles.Count) -Activity "Opening log files..." -Status "Opening $counter of $($logFiles.Count)"
     $reader[$log] = new-object System.IO.StreamReader(New-Object IO.FileStream($log, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [IO.FileShare]::ReadWrite))
     $lastMaxOffset[$log] = $reader[$log].BaseStream.Length
+    $counter++
 }
 
 $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
 
 $output = while ($elapsed.Elapsed.TotalSeconds -lt $secondsToMonitor){
 
+    Write-Progress -PercentComplete ($elapsed.Elapsed.TotalSeconds * 100 / $secondsToMonitor) -Activity "Opening log files..." -Status "Collecting data, elapsed time: $($elapsed.Elapsed.TotalSeconds) of $secondsToMonitor"
     foreach($log in ($logFiles | select -Unique)){
 
         if ($reader[$log].BaseStream.Length -eq $lastMaxOffset[$log]) {

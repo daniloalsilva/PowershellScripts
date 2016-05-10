@@ -106,3 +106,4 @@ $output = while ($elapsed.Elapsed.TotalSeconds -lt $secondsToMonitor){
 }
 
 $output |  Out-GridView
+# $output | group 'cs-host' | sort Count

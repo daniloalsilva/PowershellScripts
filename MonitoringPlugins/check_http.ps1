@@ -20,7 +20,7 @@
     File Name      : check_http.ps1
     Author         : Danilo Silva - daniloalsilva@gmail.com
     Prerequisite   : PowerShell V2 or greater.
-    Copyright 2014 - Danilo Silva/Locaweb
+    Copyright 2014 - Danilo Silva
 
     CHANGELOG
         17/07/2014 : added -omitresponse and -regex
